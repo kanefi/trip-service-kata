@@ -16,6 +16,11 @@ namespace TripServiceKata.Tests
             {
                 return _user;
             }
+
+            public override List<Trip.Trip> FindTrips(User.User user)
+            {
+                return user.Trips();
+            }
         }
 
         [Test]
@@ -28,15 +33,30 @@ namespace TripServiceKata.Tests
         }
 
         [Test]
-        public void GetTripsByUser_WhenLoggedIn_ReturnsTripList()
+        public void GetTripsByUser_WhenLoggedInAndNotFriends_ReturnsEmptyTripList()
         {
             MockTripService tripService = new MockTripService();
             User.User user = new User.User();
 
             var result = tripService.GetTripsByUser(user);
 
-            Assert.NotNull(result);
             Assert.IsInstanceOf<List<Trip.Trip>>(result);
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
+        public void GetTripsByUser_WhenLoggedInAndFriends_ReturnsTrips()
+        {
+            MockTripService tripService = new MockTripService();
+            _user = new User.User();
+            User.User usersFriend = new User.User();
+            usersFriend.AddFriend(_user);
+            usersFriend.AddTrip(new Trip.Trip());
+
+            var result = tripService.GetTripsByUser(usersFriend);
+
+            Assert.IsInstanceOf<List<Trip.Trip>>(result);
+            Assert.AreNotEqual(0, result.Count);
         }
     }
 }

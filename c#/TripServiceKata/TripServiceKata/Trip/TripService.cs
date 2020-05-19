@@ -23,7 +23,7 @@ namespace TripServiceKata.Trip
                 }
                 if (isFriend)
                 {
-                    tripList = TripDAO.FindTripsByUser(user);
+                    tripList = FindTrips(user);
                 }
                 return tripList;
             }
@@ -33,9 +33,16 @@ namespace TripServiceKata.Trip
             }
         }
 
+        public virtual List<Trip> FindTrips(User.User user)
+        {
+            return TripDAO.FindTripsByUser(user);
+        }
+
         public virtual User.User GetLoggedInUser()
         {
             return UserSession.GetInstance().GetLoggedUser();
         }
+
+     
     }
 }
